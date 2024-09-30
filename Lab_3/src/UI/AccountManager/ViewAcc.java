@@ -4,6 +4,9 @@
  */
 package UI.AccountManager;
 
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.Account;
 import model.AccountDirectory;
@@ -13,20 +16,23 @@ import model.AccountDirectory;
  * @author aadilkarim
  */
 public class ViewAcc extends javax.swing.JPanel {
-    JPanel container;
+    //JPanel container;
+    JPanel userProcCont;
     AccountDirectory directory;
     Account account;
+    
     /**
      * Creates new form ViewAcc
      */
-    public ViewAcc(JPanel container,AccountDirectory directory, Account account) {
+    public ViewAcc(JPanel userProcCont,AccountDirectory directory, Account account) {
         initComponents();
-        this.container=container;
+        //this.container=container;
+        this.userProcCont=userProcCont;
         this.account=account;
-        //refreshTextFied();
-        //setViewMode();
+        refreshTextField();
+        setViewMode();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,12 +64,27 @@ public class ViewAcc extends javax.swing.JPanel {
 
         btnBack.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         btnBack.setText("<<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnSave.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -126,6 +147,39 @@ public class ViewAcc extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        userProcCont.remove(this);
+        
+        Component [] panelStack = userProcCont.getComponents();
+        JPanel lastpanel = (JPanel) panelStack[panelStack.length - 1];
+        ManageAcc manageacc = (ManageAcc) lastpanel;
+        manageacc.populateTable();
+        
+        CardLayout layout = (CardLayout) userProcCont.getLayout();
+        layout.previous(userProcCont);
+        
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String routingNumber = txtRoutingNo.getText();
+        String accountNumber = txtAccNo.getText();
+        String bankName = txtBank.getText();
+        if(routingNumber.isBlank() || accountNumber.isBlank() || bankName.isBlank()){
+            JOptionPane.showMessageDialog(this, "enter data in all the fields", "error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        account.setAccountNo(accountNumber);
+        account.setBankName(bankName);
+        account.setRoutingNo(routingNumber);
+        JOptionPane.showMessageDialog(this, "Account Saved ", "Success", JOptionPane.PLAIN_MESSAGE);
+        
+        setViewMode();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        setEditMode();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
@@ -139,4 +193,31 @@ public class ViewAcc extends javax.swing.JPanel {
     private javax.swing.JTextField txtBank;
     private javax.swing.JTextField txtRoutingNo;
     // End of variables declaration//GEN-END:variables
+
+    private void refreshTextField() {
+        txtAccNo.setText(account.getAccountNo());
+        txtBank.setText(account.getBankName());
+        txtRoutingNo.setText(account.getRoutingNo());
+    
+    }
+
+    private void setViewMode() {
+        txtAccNo.setEnabled(false);
+        txtBank.setEnabled(false);
+        txtRoutingNo.setEnabled(false);
+        btnSave.setEnabled(false);
+        btnUpdate.setEnabled(true);
+        
+    }
+
+    private void setEditMode() {
+        txtAccNo.setEnabled(true);
+        txtBank.setEnabled(true);
+        txtRoutingNo.setEnabled(true);
+        
+        btnSave.setEnabled(true);
+        btnUpdate.setEnabled(false);
+    
+    }
+
 }

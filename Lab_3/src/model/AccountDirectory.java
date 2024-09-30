@@ -39,6 +39,17 @@ public class AccountDirectory {
     
     }
     
+    public Account searchAccount(String accountNumber){
+    
+        for (Account a : accounts)
+        {
+            if(a.getAccountNo().contains(accountNumber)){
+                return a;
+            }
+        }
+        return null;
+    }
+    
     
     
 }

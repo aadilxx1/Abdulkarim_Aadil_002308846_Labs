@@ -72,6 +72,11 @@ public class ManageAcc extends javax.swing.JPanel {
         });
 
         btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         btnViewDet.setText("View Details");
         btnViewDet.addActionListener(new java.awt.event.ActionListener() {
@@ -174,6 +179,26 @@ public class ManageAcc extends javax.swing.JPanel {
             }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        if(!txtSearchBox.getText().isBlank()){
+            String accountNumber = txtSearchBox.getText();
+            Account foundAccount = accountDirectory.searchAccount(accountNumber);
+            
+            if(foundAccount != null )
+            {
+                ViewAcc panel = new ViewAcc(userProcCont,accountDirectory,foundAccount);
+                userProcCont.add("ViewAccountJPanel", panel);
+                CardLayout layout = (CardLayout) userProcCont.getLayout();
+                layout.next(userProcCont);   
+            }
+            else {
+            JOptionPane.showMessageDialog(null, "Account Not Found", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else 
+            JOptionPane.showMessageDialog(null, "Enter you account Number", "Warning", JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_btnSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
@@ -186,7 +211,7 @@ public class ManageAcc extends javax.swing.JPanel {
     private javax.swing.JTextField txtSearchBox;
     // End of variables declaration//GEN-END:variables
 
-    private void populateTable() {
+    public void populateTable() {
        DefaultTableModel model = (DefaultTableModel) tblAccounts.getModel();
         model.setRowCount(0);
         
